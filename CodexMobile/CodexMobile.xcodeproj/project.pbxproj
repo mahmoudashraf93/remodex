@@ -519,11 +519,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HR24WHR326;
+				DEVELOPMENT_TEAM = C3R78FYQ8Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = CodexMobileTests;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.emanueledipietro.CodexMobileTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mahmoud.CodexMobileTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -537,11 +537,11 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HR24WHR326;
+				DEVELOPMENT_TEAM = C3R78FYQ8Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = CodexMobileUITests;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.emanueledipietro.CodexMobileUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mahmoud.CodexMobileUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -555,11 +555,11 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HR24WHR326;
+				DEVELOPMENT_TEAM = C3R78FYQ8Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = CodexMobileUITests;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.emanueledipietro.CodexMobileUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mahmoud.CodexMobileUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -575,11 +575,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HR24WHR326;
+				DEVELOPMENT_TEAM = C3R78FYQ8Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = CodexMobileTests;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.emanueledipietro.CodexMobileTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mahmoud.CodexMobileTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -814,7 +814,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = HR24WHR326;
+				DEVELOPMENT_TEAM = C3R78FYQ8Z;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "BuildSupport/RemodexMenuBar-Info.plist";
@@ -825,7 +825,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.emanueledipietro.RemodexMenuBar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mahmoud.RemodexMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -848,7 +848,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = HR24WHR326;
+				DEVELOPMENT_TEAM = C3R78FYQ8Z;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "BuildSupport/RemodexMenuBar-Info.plist";
@@ -859,7 +859,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.emanueledipietro.RemodexMenuBar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mahmoud.RemodexMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
