@@ -196,7 +196,7 @@ struct ContentView: View {
     // Keeps sheets and alerts out of the lifecycle chain so the compiler can reason about each stage separately.
     private var rootContentWithPresentations: some View {
         rootContentWithLifecycleObservers
-            // Presents exactly one root-owned sheet at a time so onboarding, paywall, updates,
+            // Presents exactly one root-owned sheet at a time so onboarding, updates,
             // and delayed announcements cannot race each other into stacked presentations.
             .sheet(item: presentedRootSheetBinding) { route in
                 switch route {
@@ -274,10 +274,6 @@ struct ContentView: View {
             OnboardingView {
                 finishOnboardingAndShowScanner()
             }
-        } else if subscriptions.bootstrapState == .failed && !subscriptions.hasAppAccess {
-            SubscriptionBootstrapFailureView()
-        } else if !subscriptions.hasAppAccess {
-            SubscriptionGateView()
         } else if shouldShowQRScanner {
             qrScannerBody
         } else {
@@ -1030,7 +1026,7 @@ struct ContentView: View {
         return nil
     }
 
-    // Blocks lower-priority sheets while onboarding, pairing, paywall, or root alerts own the screen.
+    // Blocks lower-priority sheets while onboarding, pairing, or root alerts own the screen.
     private var canPresentDeferredRootSheet: Bool {
         scenePhase == .active
             && hasSeenOnboarding
