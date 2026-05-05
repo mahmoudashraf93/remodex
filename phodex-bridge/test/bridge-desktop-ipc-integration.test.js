@@ -104,6 +104,12 @@ test("bridge forwards desktop IPC actions to the phone and routes replies back t
   }));
 
   await waitFor(() => ipcServerSocket);
+  await wait(25);
+  assert.equal(
+    fakeCodex.sent.some((message) => message.method === "thread/read"),
+    false
+  );
+
   writeFrame(ipcServerSocket, {
     type: "broadcast",
     method: "thread-stream-state-changed",

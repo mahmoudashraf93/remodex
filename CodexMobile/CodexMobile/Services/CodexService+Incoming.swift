@@ -293,6 +293,9 @@ extension CodexService {
         case "serverRequest/resolved":
             handleServerRequestResolved(paramsObject)
 
+        case "git/stackedAction/progress":
+            handleGitStackedActionProgress(paramsObject)
+
         default:
             if method.hasPrefix("codex/event/"),
                handleLegacyCodexNamedEvent(method: method, paramsObject: paramsObject) {
@@ -551,12 +554,16 @@ extension CodexService {
                 return
             }
 
-            lastErrorMessage = turnFailureMessage
-            appendSystemMessage(
-                threadId: threadId,
-                text: "Turn error: \(turnFailureMessage)",
-                turnId: completedTurnID
-            )
+            let userFacingFailureMessage = userFacingRuntimeMessage(for: turnFailureMessage)
+                ?? turnFailureMessage
+            lastErrorMessage = shouldSuppressRuntimeMessageInChat(turnFailureMessage) ? nil : userFacingFailureMessage
+            if !shouldSuppressRuntimeMessageInChat(turnFailureMessage) {
+                appendSystemMessage(
+                    threadId: threadId,
+                    text: "Turn error: \(userFacingFailureMessage)",
+                    turnId: completedTurnID
+                )
+            }
             return
         }
 
@@ -565,7 +572,9 @@ extension CodexService {
         guard let turnFailureMessage else {
             return
         }
-        lastErrorMessage = turnFailureMessage
+        lastErrorMessage = shouldSuppressRuntimeMessageInChat(turnFailureMessage)
+            ? nil
+            : (userFacingRuntimeMessage(for: turnFailureMessage) ?? turnFailureMessage)
     }
 
     private func handleErrorNotification(_ paramsObject: IncomingParamsObject?) {
@@ -584,12 +593,16 @@ extension CodexService {
             firstStringValue(in: eventErrorObject, keys: ["message"]),
             firstStringValue(in: nestedEventObject, keys: ["message"]),
         ]) ?? "Server error"
-        lastErrorMessage = errorMessage
+        let shouldSuppressErrorMessage = shouldSuppressRuntimeMessageInChat(errorMessage)
+        let userFacingErrorMessage = userFacingRuntimeMessage(for: errorMessage) ?? errorMessage
+        lastErrorMessage = shouldSuppressErrorMessage ? nil : userFacingErrorMessage
 
         let turnId = extractTurnID(from: paramsObject)
         if let threadId = resolveThreadID(from: paramsObject, turnIdHint: turnId) {
             let resolvedTurnID = turnId ?? activeTurnIdByThread[threadId]
-            appendSystemMessage(threadId: threadId, text: "Error: \(errorMessage)", turnId: turnId)
+            if !shouldSuppressErrorMessage {
+                appendSystemMessage(threadId: threadId, text: "Error: \(userFacingErrorMessage)", turnId: turnId)
+            }
             recordTurnTerminalState(threadId: threadId, turnId: resolvedTurnID, state: .failed)
             noteTurnFinished(turnId: resolvedTurnID)
             markTurnCompleted(threadId: threadId, turnId: resolvedTurnID)
@@ -3192,6 +3205,29 @@ extension CodexService {
         let threadId = normalizedResolvedRequestThreadID(paramsObject?["threadId"]?.stringValue)
         removeStructuredUserInputPrompt(requestID: requestID, threadIdHint: threadId)
         removePendingApproval(requestID: requestID)
+    }
+
+    // Routes phase notifications from `git/runStackedAction` to the per-call subscriber.
+    func handleGitStackedActionProgress(_ paramsObject: IncomingParamsObject?) {
+        guard let progressId = paramsObject?["progressId"]?.stringValue,
+              let phaseRaw = paramsObject?["phase"]?.stringValue,
+              let phase = TurnGitActionPhase(bridgePhase: phaseRaw),
+              let statusRaw = paramsObject?["status"]?.stringValue,
+              let status = TurnGitActionPhaseStatus(rawValue: statusRaw) else {
+            return
+        }
+        gitStackedActionProgressHandlers[progressId]?(phase, status)
+    }
+
+    func registerGitStackedActionProgressHandler(
+        progressId: String,
+        handler: @escaping (TurnGitActionPhase, TurnGitActionPhaseStatus) -> Void
+    ) {
+        gitStackedActionProgressHandlers[progressId] = handler
+    }
+
+    func unregisterGitStackedActionProgressHandler(progressId: String) {
+        gitStackedActionProgressHandlers.removeValue(forKey: progressId)
     }
 }
 

@@ -143,16 +143,31 @@ cd remodex
 ./run-local-remodex.sh
 ```
 
-That launcher starts a local relay, points the bridge at `ws://<your-host>:9000/relay`, and prints the pairing QR for the iPhone app.
+That launcher starts a local relay, points the bridge at `ws://<your-host>:9000/relay` by default, and prints the pairing QR for the iPhone app.
 
 For iPhone self-hosting, the recommended path is Tailscale or another stable private network. Plain LAN pairing over `ws://<lan-ip>` on the same Wi-Fi is still available for local testing, but it can be unreliable on some iOS devices even when the relay and Wi-Fi are healthy.
 
 Options:
 
 - `./run-local-remodex.sh --hostname <lan-hostname-or-ip>`
+- `./run-local-remodex.sh --relay-url https://<random>.trycloudflare.com`
 - `./run-local-remodex.sh --bind-host 127.0.0.1 --port 9100`
 
 If your iPhone is pairing over LAN, use a hostname or IP the phone can actually reach.
+
+For a temporary Cloudflare Tunnel, run this in one terminal:
+
+```sh
+cloudflared tunnel --url http://127.0.0.1:9000
+```
+
+Then pass the generated `https://<random>.trycloudflare.com` URL to the local launcher in another terminal:
+
+```sh
+./run-local-remodex.sh --relay-url https://<random>.trycloudflare.com
+```
+
+The launcher advertises that as `wss://<random>.trycloudflare.com/relay` in the pairing QR while keeping the relay process local.
 
 ## Custom Relay Endpoint
 
@@ -191,31 +206,6 @@ In that setup, the public endpoints can look like this:
 Have the proxy strip `/remodex` before forwarding so the relay still receives `/relay/...` and `/v1/push/...`.
 
 If you point `REMODEX_RELAY` at your own self-hosted relay, managed push stays off unless you also set `REMODEX_PUSH_SERVICE_URL` on the bridge and explicitly enable push on the relay.
-
-## Publish to npm
-
-Published npm packages can embed default private relay settings at pack time via the `prepack` script.
-
-The current package version is `1.3.4`.
-
-To publish the bridge with `api.phodex.app` as the default relay:
-
-```sh
-cd phodex-bridge
-npm login
-REMODEX_PACKAGE_DEFAULT_RELAY_URL="wss://api.phodex.app/relay" \
-npm publish
-```
-
-After publish, users can still override the packaged default at runtime with `REMODEX_RELAY`.
-
-You can also run the bridge from source:
-
-```sh
-cd phodex-bridge
-npm install
-REMODEX_RELAY="ws://localhost:9000/relay" npm start
-```
 
 ## Commands
 
@@ -267,7 +257,7 @@ Prints the installed Remodex CLI version.
 
 ```sh
 remodex --version
-# => 1.3.4
+# => 1.5.0
 ```
 
 ### `remodex reset-pairing`

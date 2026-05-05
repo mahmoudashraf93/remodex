@@ -58,6 +58,16 @@ struct SidebarView: View {
             .padding(.horizontal, 16)
             .padding(.bottom, 10)
 
+            if SidebarThreadsLoadingPresentation.shouldShowInlineStatus(
+                isLoadingThreads: codex.isLoadingThreads,
+                threadCount: codex.threads.count
+            ) {
+                SidebarThreadsInlineLoadingView()
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 8)
+                    .transition(.opacity)
+            }
+
             SidebarThreadListView(
                 isFiltering: !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                 isConnected: codex.isConnected,
@@ -292,7 +302,7 @@ struct SidebarView: View {
                 )
                 onOpenThread(thread)
             } catch {
-                let message = error.localizedDescription
+                guard let message = codex.userFacingTurnErrorMessageForFooter(from: error) else { return }
                 codex.lastErrorMessage = message
                 createThreadErrorMessage = message.isEmpty ? "Unable to create a chat right now." : message
             }
@@ -317,7 +327,7 @@ struct SidebarView: View {
                 )
                 onOpenThread(thread)
             } catch {
-                let message = error.localizedDescription
+                guard let message = codex.userFacingTurnErrorMessageForFooter(from: error) else { return }
                 codex.lastErrorMessage = message
                 createThreadErrorMessage = message.isEmpty ? "Unable to create a worktree chat right now." : message
             }
@@ -572,6 +582,27 @@ enum SidebarThreadsLoadingPresentation {
     // Keeps pull-to-refresh from stacking a second spinner over an already populated sidebar.
     static func shouldShowOverlay(isLoadingThreads: Bool, threadCount: Int) -> Bool {
         isLoadingThreads && threadCount == 0
+    }
+
+    // Populated sidebars still need feedback while the complete metadata pass is running.
+    static func shouldShowInlineStatus(isLoadingThreads: Bool, threadCount: Int) -> Bool {
+        isLoadingThreads && threadCount > 0
+    }
+}
+
+private struct SidebarThreadsInlineLoadingView: View {
+    var body: some View {
+        HStack(spacing: 8) {
+            ProgressView()
+                .controlSize(.small)
+            Text("Syncing chats")
+                .font(AppFont.caption())
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 8))
     }
 }
 
